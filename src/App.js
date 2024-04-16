@@ -2,6 +2,8 @@ import { useState } from "react";
 import { createUseStyles } from "react-jss";
 import { useWebcamCapture } from "./useWebcamCapture";
 import Navbar from "./components/Navbar/Navbar";
+import Header from "./components/Header/Header";
+
 // import logo from './logo.svg'
 import logo from "./slap.png";
 
@@ -110,13 +112,7 @@ function App(props) {
   return (
     <div className={classes.App}>
       <Navbar />
-      <header className={classes.Header}>
-        <h1>SlapSticker</h1>
-        <p>
-          Have you ever said something so dumb, you just wanted to slap
-          yourself? Well now you can!
-        </p>
-      </header>
+      <Header classes={classes} />
       <Switch>
         /** * Main app route */
         <Route path="/" exact>
