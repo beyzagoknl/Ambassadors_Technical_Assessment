@@ -4,6 +4,7 @@ import { useWebcamCapture } from "./useWebcamCapture";
 import Navbar from "./components/Navbar/Navbar";
 import Header from "./components/Header/Header";
 import Stickers from "./components/Stickers/Stickers";
+import Gallery from "./components/Gallery/Gallery";
 
 // import logo from './logo.svg'
 import logo from "./slap.png";
@@ -118,14 +119,6 @@ function App(props) {
         /** * Main app route */
         <Route path="/" exact>
           <main>
-            <section className={classes.Gallery}>
-              Step one: Give it a name
-              <input
-                type="text"
-                value={title}
-                onChange={(ev) => setTitle(ev.target.value)}
-              />
-            </section>
             <Stickers
               classes={classes}
               stickers={stickers}
@@ -140,15 +133,12 @@ function App(props) {
                 height={2}
                 onClick={handleCapture}
               />
-            </section>
-            <section className={classes.Gallery}>
-              Step 4: Cherish this moment forever
-              {picture && (
-                <div className={classes.Picture}>
-                  <img src={picture.dataUri} />
-                  <h3>{picture.title}</h3>
-                </div>
-              )}
+              <Gallery
+                classes={classes}
+                picture={picture}
+                title={title}
+                setTitle={setTitle}
+              />
             </section>
           </main>
         </Route>
