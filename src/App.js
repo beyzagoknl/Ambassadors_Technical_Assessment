@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createUseStyles } from "react-jss";
 import { useWebcamCapture } from "./useWebcamCapture";
 import Navbar from "./components/Navbar/Navbar";
@@ -6,7 +6,6 @@ import Header from "./components/Header/Header";
 import Stickers from "./components/Stickers/Stickers";
 import Gallery from "./components/Gallery/Gallery";
 
-// import logo from './logo.svg'
 import logo from "./slap.png";
 
 import { Link, Switch, Route, Redirect } from "react-router-dom";
@@ -17,20 +16,30 @@ const useStyles = createUseStyles((theme) => ({
     color: theme.palette.text,
     fontFamily: "sans-serif",
   },
-
   App: {
     padding: "20px",
-    background: theme.palette.primary,
-    maxWidth: "800px",
+    background: theme.palette.background,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
     minHeight: "100vh",
+    maxWidth: "800px",
+    margin: "auto",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-around",
     alignItems: "center",
-    margin: "auto",
+    justifyContent: "space-around",
     "& a": {
       color: theme.palette.text,
     },
+  },
+  fadeIn: {
+    animation: "$fadeIn 3s ease-in-out infinite",
+  },
+  "@keyframes fadeIn": {
+    "0%": { opacity: 0 },
+    "50%": { opacity: 1 },
+    "100%": { opacity: 0 },
   },
   Header: {
     textAlign: "center",
@@ -65,7 +74,6 @@ const useStyles = createUseStyles((theme) => ({
       margin: "10px",
     },
   },
-
   Gallery: {
     display: "flex",
     flexDirection: "column",
@@ -76,7 +84,6 @@ const useStyles = createUseStyles((theme) => ({
     },
   },
   Picture: {
-    background: "#9896f1",
     padding: "10px",
     display: "flex",
     flexDirection: "column",
@@ -96,27 +103,33 @@ const stickers = [logo].map((url) => {
 });
 
 function App(props) {
-  // css classes from JSS hook
   const classes = useStyles(props);
-  // currently active sticker
   const [sticker, setSticker] = useState();
-  // title for the picture that will be captured
   const [title, setTitle] = useState("SLAPPE!");
+  const [displayedText, setDisplayedText] = useState("");
 
-  // webcam behavior hook
-  const [
-    handleVideoRef, // callback function to set ref for invisible video element
-    handleCanvasRef, // callback function to set ref for main canvas element
-    handleCapture, // callback function to trigger taking the picture
-    picture, // latest captured picture data object
-  ] = useWebcamCapture(sticker?.img, title);
+  const text = "Welcome to SlapSticker!";
+
+  useEffect(() => {
+    let index = 0;
+    const intervalId = setInterval(() => {
+      setDisplayedText((prev) => prev + text.charAt(index));
+      index++;
+      if (index === text.length) clearInterval(intervalId);
+    }, 100); // Adjust time for faster or slower typing
+
+    return () => clearInterval(intervalId); // Cleanup the interval on component unmount
+  }, []);
+
+  const [handleVideoRef, handleCanvasRef, handleCapture, picture] =
+    useWebcamCapture(sticker?.img, title);
 
   return (
     <div className={classes.App}>
       <Navbar />
       <Header classes={classes} />
+      <h1 className={classes.fadeIn}>{displayedText}</h1>
       <Switch>
-        /** * Main app route */
         <Route path="/" exact>
           <main>
             <Stickers
@@ -142,72 +155,7 @@ function App(props) {
             </section>
           </main>
         </Route>
-        /** * Readme route */
-        <Route path="/readme">
-          <main>
-            <h2>Devtest Readme</h2>
-            <p>
-              Hello candidate, Welcome to our little dev test. The goal of this
-              exercise, is to asses your general skill level, and give us
-              something to talk about at our next appointment.
-            </p>
-            <section>
-              <h3>What this app should do</h3>
-              <p>
-                SlapSticker is an app that lets users to slap stickers on their
-                face, using their webcam. Functionality wise the app works, but
-                the ui needs some love. We'd like for you to extend this
-                prototype to make it look and feel it bit better.
-              </p>
-              <p>These are the basic requirements:</p>
-              <ul>
-                <li>User can pick a sticker</li>
-                <li>User can give the captured image a title</li>
-                <li>User can place the sticker over the webcam image</li>
-                <li>User can capture the webcam image with sticker</li>
-              </ul>
-            </section>
-            <section>
-              <h3>What we want you to do</h3>
-              <p>
-                Off course we didn't expect you to build a full fledged app in
-                such a short time frame. That's why the basic requirements are
-                already implemented.
-              </p>
-              <p>
-                However, we would like for you to show off your strengths as a
-                developer by improving the app.
-              </p>
-              <p>Some ideas (no need to do all):</p>
-              <ul>
-                <li>Make it look really nice</li>
-                <li>Let users pick from multiple (custom) stickers</li>
-                <li>Improve the workflow and ux</li>
-                <li>Show multiple captured images in a gallery</li>
-                <li>Let users download or share the captured pics</li>
-                <li>Add super cool effects to webcam feed</li>
-                <li>Organize, document and test the code</li>
-                <li>Integrate with zoom, teams, meet...</li>
-              </ul>
-            </section>
-            <section>
-              <h3> quickstart</h3>
-              <ul>
-                <li>You can clone this repo to get started </li>
-                <li>run `$ npm install` to install deps</li>
-                <li>run `$ npm run start` to start dev environment</li>
-                <li>push it to github or gitlab to share it with us. </li>
-              </ul>
-            </section>
-            <section>
-              <p>
-                P.s. We've already added some libraries to make your life easier
-                (Create React App, Jss, React Router), but feel free to add
-                more.
-              </p>
-            </section>
-          </main>
-        </Route>
+        <Route path="/readme">{/* Other Routes and Components */}</Route>
         <Redirect to="/" />
       </Switch>
     </div>
