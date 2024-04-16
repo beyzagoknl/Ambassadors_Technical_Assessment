@@ -54,20 +54,21 @@ const useStyles = createUseStyles((theme) => ({
   },
   Stickers: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "center",
     "& img": {
       height: "4rem",
       margin: "10px",
     },
   },
+
   Gallery: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     "& img": {
       height: "16rem",
-      margin: "10px",
+      margin: "10px 20px",
     },
   },
   Picture: {
@@ -134,6 +135,7 @@ function App(props) {
                 <img src={stickers[0].url} />
               </button>
             </section>
+
             <section className={classes.Main}>
               Step three: Slap your self!
               <video ref={handleVideoRef} />
