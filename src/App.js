@@ -3,6 +3,7 @@ import { createUseStyles } from "react-jss";
 import { useWebcamCapture } from "./useWebcamCapture";
 import Navbar from "./components/Navbar/Navbar";
 import Header from "./components/Header/Header";
+import Stickers from "./components/Stickers/Stickers";
 
 // import logo from './logo.svg'
 import logo from "./slap.png";
@@ -125,13 +126,11 @@ function App(props) {
                 onChange={(ev) => setTitle(ev.target.value)}
               />
             </section>
-            <section className={classes.Stickers}>
-              Step 2: select your sticker...
-              <button onClick={() => setSticker(stickers[0])}>
-                <img src={stickers[0].url} />
-              </button>
-            </section>
-
+            <Stickers
+              classes={classes}
+              stickers={stickers}
+              setSticker={setSticker}
+            />
             <section className={classes.Main}>
               Step three: Slap your self!
               <video ref={handleVideoRef} />
