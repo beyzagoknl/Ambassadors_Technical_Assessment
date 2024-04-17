@@ -6,7 +6,7 @@ import { createUseStyles } from "react-jss";
 const useStyles = createUseStyles((theme) => ({
   Nav: {
     width: "100%",
-    background: theme.palette.primaryDark,
+    background: "#31afd4",
     padding: "10px 0",
     display: "flex",
     justifyContent: "center",
