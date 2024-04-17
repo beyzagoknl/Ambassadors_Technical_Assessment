@@ -1,13 +1,40 @@
 import React from "react";
 
-function Stickers({ classes, stickers, setSticker }) {
+function Stickers({ classes, stickers, setSelectedSticker }) {
+  const setSelectedStickerWithImage = (sticker) => {
+    const image = new Image();
+    image.onload = () => {
+      setSelectedSticker({ ...sticker, img: image });
+    };
+    image.onerror = () => {
+      console.error("Image failed to load:", sticker.img);
+    };
+    image.src = sticker.img;
+  };
+
+  const handleStickerSelection = (sticker) => {
+    setSelectedStickerWithImage(sticker);
+  };
+
   return (
     <section className={classes.Stickers}>
-      Step 2: Select your sticker...
+      <h2>Step 2: Select your sticker...</h2>
       {stickers.map((sticker, index) => (
-        <button key={index} onClick={() => setSticker(sticker)}>
-          <img src={sticker.url} alt={`Sticker ${index}`} />
-        </button>
+        <label key={index} className={classes.StickerLabel}>
+          <input
+            type="radio"
+            name="sticker"
+            value={sticker.id}
+            onChange={() => handleStickerSelection(sticker)}
+            style={{ marginRight: "10px" }}
+          />
+          <img
+            src={sticker.img}
+            alt={`Sticker ${index}`}
+            style={{ verticalAlign: "middle" }}
+          />
+          {sticker.alt}
+        </label>
       ))}
     </section>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { createUseStyles } from "react-jss";
 import { useWebcamCapture } from "./useWebcamCapture";
 import Navbar from "./components/Navbar/Navbar";
@@ -6,7 +6,9 @@ import Header from "./components/Header/Header";
 import Stickers from "./components/Stickers/Stickers";
 import Gallery from "./components/Gallery/Gallery";
 
-import logo from "./slap.png";
+import logo from "../src/assets/slap.png";
+import smile from "../src/assets/smile.png";
+import crown from "../src/assets/crown.png";
 
 import { Link, Switch, Route, Redirect } from "react-router-dom";
 
@@ -51,15 +53,16 @@ const useStyles = createUseStyles((theme) => ({
     },
   },
   Main: {
-    background: theme.palette.secondary,
     width: "100%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    marginTop: "10px",
     justifyContent: "center",
     "& canvas": {
-      width: "100%",
-      height: "auto",
+      width: "640px",
+      height: "480px",
+      cursor: "pointer",
     },
     "& video": {
       display: "none",
@@ -96,33 +99,18 @@ const useStyles = createUseStyles((theme) => ({
   },
 }));
 
-const stickers = [logo].map((url) => {
-  const img = document.createElement("img");
-  img.src = url;
-  return { img, url };
-});
+const initialStickers = [
+  { id: "logo1", img: logo, alt: "Slappppp!", active: false },
+  { id: "logo3", img: smile, alt: "Kiss me!", active: false },
+  { id: "logo2", img: crown, alt: "I am a king!", active: false },
+];
 
 function App(props) {
   const classes = useStyles(props);
-  const [sticker, setSticker] = useState();
   const [title, setTitle] = useState("SLAPPE!");
-  const [displayedText, setDisplayedText] = useState("");
-
-  const text = "Welcome to SlapSticker!";
-
-  useEffect(() => {
-    let index = 0;
-    const intervalId = setInterval(() => {
-      setDisplayedText((prev) => prev + text.charAt(index));
-      index++;
-      if (index === text.length) clearInterval(intervalId);
-    }, 100); // Adjust time for faster or slower typing
-
-    return () => clearInterval(intervalId); // Cleanup the interval on component unmount
-  }, []);
-
-  const [handleVideoRef, handleCanvasRef, handleCapture, picture] =
-    useWebcamCapture(sticker?.img, title);
+  const [displayedText] = useState("Welcome to SlapSticker!");
+  const { videoRef, canvasRef, onCapture, picture, setSelectedSticker } =
+    useWebcamCapture(initialStickers, title);
 
   return (
     <div className={classes.App}>
@@ -134,18 +122,19 @@ function App(props) {
           <main>
             <Stickers
               classes={classes}
-              stickers={stickers}
-              setSticker={setSticker}
+              stickers={initialStickers}
+              setSelectedSticker={setSelectedSticker}
             />
             <section className={classes.Main}>
-              Step three: Slap your self!
-              <video ref={handleVideoRef} />
+              <video ref={videoRef} style={{ display: "none" }} />
               <canvas
-                ref={handleCanvasRef}
-                width={2}
-                height={2}
-                onClick={handleCapture}
+                ref={canvasRef}
+                width="640"
+                height="480"
+                onClick={onCapture}
+                style={{ cursor: "none" }}
               />
+
               <Gallery
                 classes={classes}
                 picture={picture}
@@ -155,7 +144,7 @@ function App(props) {
             </section>
           </main>
         </Route>
-        <Route path="/readme">{/* Other Routes and Components */}</Route>
+        <Route path="/readme"></Route>
         <Redirect to="/" />
       </Switch>
     </div>
