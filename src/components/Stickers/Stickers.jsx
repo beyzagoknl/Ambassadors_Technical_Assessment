@@ -18,7 +18,7 @@ function Stickers({ classes, stickers, setSelectedSticker }) {
 
   return (
     <section className={classes.Stickers}>
-      <h2>Step 2: Select your sticker...</h2>
+      <h2> Select your mood! </h2>
       {stickers.map((sticker, index) => (
         <label key={index} className={classes.StickerLabel}>
           <input

@@ -3,7 +3,7 @@ import React from "react";
 function Gallery({ classes, picture, title, setTitle }) {
   return (
     <section className={classes.Gallery}>
-      <h2> Give it a name</h2>
+      <h2> Write your title! </h2>
       <input
         type="text"
         value={title}
@@ -16,7 +16,6 @@ function Gallery({ classes, picture, title, setTitle }) {
           <h3>{title}</h3>
         </div>
       )}
-      {/* Another pictures */}
     </section>
   );
 }
